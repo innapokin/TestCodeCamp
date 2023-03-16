@@ -1,0 +1,5 @@
+Dear marker,
+
+I just wanted to mention that i had problems with my intellij. My test was not running initially and i got errors saying that there was no test to be could be found. While i was troubleshooting, the software stopped opening completely. I had to unsinstall and install the software which generated new errors. So i decided to push the work like that. I would try to finish it whenever i can and push it to github regardless of whether the task has been graded or not.
+
+Thank you for your concideration.
