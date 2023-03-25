@@ -1,5 +1,6 @@
 import org.testng.annotations.Test;
 import org.openqa.selenium.By;
+//import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeOptions;
@@ -9,7 +10,6 @@ import org.testng.Assert;
 import org.testng.annotations.AfterTest;
 import org.testng.annotations.BeforeTest;
 import io.github.bonigarcia.wdm.WebDriverManager;
-//import org.openqa.selenium.support.ui.Select;
 
 public class KongaTest {
     
@@ -27,24 +27,65 @@ public class KongaTest {
         //open url
         driver.get("https://www.konga.com");
         driver.manage().window().maximize();
+
+        //zoom window
+        //JavascriptExecutor js = (JavascriptExecutor)driver;
+        //String zoomChrome = "document.body.style.zoom = '125%';";
+        //js.executeScript(zoomChrome);
         Thread.sleep(10000);
     }
 
-     @Test (priority = 0)
-    public void signIn() throws InterruptedException{
+    @Test (priority = 0)
+    public void url() throws InterruptedException{
+        if (driver.getCurrentUrl().contains("https://www.konga.com"))
+            //pass
+            System.out.println("Correct Webpage");
+        else 
+            //fail
+            System.out.println("Wrong Webpage");
+    }
+
+    @Test (priority = 1)
+    public void negativesignIn() throws InterruptedException{
         //click login / signup
         driver.findElement(By.xpath("/html/body/div[1]/div/section/div[3]/nav/div[2]/div[1]/div/div/div[4]")).click();
-        //input username
-        driver.findElement(By.xpath("/html/body/div[1]/div/section/div[4]/section/section/aside/div[2]/div/form/div[1]/input")).sendKeys("");
+        //input invalid username
+        driver.findElement(By.xpath("/html/body/div[1]/div/section/div[4]/section/section/aside/div[2]/div/form/div[1]/input")).sendKeys("0706515346");
         //input password
-        driver.findElement(By.xpath("/html/body/div[1]/div/section/div[4]/section/section/aside/div[2]/div/form/div[2]/input")).sendKeys("");
+        driver.findElement(By.xpath("/html/body/div[1]/div/section/div[4]/section/section/aside/div[2]/div/form/div[2]/input")).sendKeys("1234mahm@");
+        Thread.sleep(5000);
+        //click login
+        driver.findElement(By.xpath("/html/body/div[1]/div/section/div[4]/section/section/aside/div[2]/div/form/div[3]")).click();
+        //close chat assistant
+        driver.findElement(By.xpath("/html/div/div/div[1]/button")).click();
+        Thread.sleep(1000);
+    }
+
+    @Test (priority = 2)
+    public void signInErrorMessage() throws InterruptedException{
+        //get error message for incorrect username and/or password
+        String actualError = driver.findElement(By.xpath("/html/body/div[1]/div/section/div[4]/section/section/aside/div[2]/div/form/div[1]/div")).getText();
+        String expectedError = "The username or password you have entered is incorrect. Please try again.";
+        Assert.assertEquals(actualError, expectedError);
+        System.out.println(expectedError);
+        Thread.sleep(10000);
+    }
+
+    @Test (priority = 3)
+    public void positivesignIn() throws InterruptedException{
+        //input username
+        driver.findElement(By.xpath("/html/body/div[1]/div/section/div[4]/section/section/aside/div[2]/div/form/div[1]/input")).clear();
+        driver.findElement(By.xpath("/html/body/div[1]/div/section/div[4]/section/section/aside/div[2]/div/form/div[1]/input")).sendKeys("07065153466");
+        //input password
+        driver.findElement(By.xpath("/html/body/div[1]/div/section/div[4]/section/section/aside/div[2]/div/form/div[2]/input")).clear();
+        driver.findElement(By.xpath("/html/body/div[1]/div/section/div[4]/section/section/aside/div[2]/div/form/div[2]/input")).sendKeys("1234mahm@");
         Thread.sleep(5000);
         //click login
         driver.findElement(By.xpath("/html/body/div[1]/div/section/div[4]/section/section/aside/div[2]/div/form/div[3]")).click();
         Thread.sleep(10000);
     }
 
-    @Test (priority = 1)
+    @Test (priority = 4)
     public void categories() throws InterruptedException{
         //select computers and accessories
         driver.findElement(By.xpath("/html/body/div[1]/div/section/div[3]/nav/div[2]/div[2]/div/a[2]")).click();
@@ -57,7 +98,7 @@ public class KongaTest {
         Thread.sleep(5000);
     }
 
-    @Test (priority = 2)
+    @Test (priority = 5)
     public void cart() throws InterruptedException{
         //add macbook to cart
         driver.findElement(By.xpath("/html/body/div[1]/div/section/div[3]/section/main/section[3]/section/section/section/section/ul/li[1]/div/div/div[2]/form/div[3]")).click();
@@ -69,7 +110,7 @@ public class KongaTest {
         driver.findElement(By.xpath("/html/body/div[1]/div/section/div[3]/section/section/aside/div[3]/div/div[2]")).click();
     }
 
-    @Test (priority = 3)
+    @Test (priority = 6)
     public void addAddress() throws InterruptedException{
         //add address
         //random window pops out to add number, so i wrote this code to close the window
@@ -81,14 +122,14 @@ public class KongaTest {
         driver.findElement(By.xpath("/html/body/div[1]/div/section/div[2]/section/main/div/form/div/div[1]/section[1]/div/div/div[2]/div[1]/div[2]/div[1]/div/button")).click();
         Thread.sleep(5000);
         //first name
-        driver.findElement(By.xpath("/html/body/div[1]/div/section/div[2]/section/section/aside/div[2]/div/div/form/div[1]/div[1]/input")).sendKeys("");
+        driver.findElement(By.xpath("/html/body/div[1]/div/section/div[2]/section/section/aside/div[2]/div/div/form/div[1]/div[1]/input")).sendKeys("Mahmoud");
         //last name
-        driver.findElement(By.xpath("/html/body/div[1]/div/section/div[2]/section/section/aside/div[2]/div/div/form/div[1]/div[2]/input")).sendKeys("");
+        driver.findElement(By.xpath("/html/body/div[1]/div/section/div[2]/section/section/aside/div[2]/div/div/form/div[1]/div[2]/input")).sendKeys("Ilyasu");
         //phone number
-        driver.findElement(By.xpath("/html/body/div[1]/div/section/div[2]/section/section/aside/div[2]/div/div/form/div[2]/input")).sendKeys("");
+        driver.findElement(By.xpath("/html/body/div[1]/div/section/div[2]/section/section/aside/div[2]/div/div/form/div[2]/input")).sendKeys("07065153466");
         //house address
-        driver.findElement(By.xpath("/html/body/div[1]/div/section/div[2]/section/section/aside/div[2]/div/div/form/div[3]/input")).sendKeys("");
-        driver.findElement(By.xpath("/html/body/div[1]/div/section/div[2]/section/section/aside/div[2]/div/div/form/div[5]/input")).sendKeys("");
+        driver.findElement(By.xpath("/html/body/div[1]/div/section/div[2]/section/section/aside/div[2]/div/div/form/div[3]/input")).sendKeys("123 Testify Avenue");
+        driver.findElement(By.xpath("/html/body/div[1]/div/section/div[2]/section/section/aside/div[2]/div/div/form/div[5]/input")).sendKeys("Success City");
         //city
         Select city = new Select(driver.findElement(By.xpath("/html/body/div[1]/div/section/div[2]/section/section/aside/div[2]/div/div/form/div[6]/div/div/select")));
         city.selectByIndex(2);
@@ -108,7 +149,7 @@ public class KongaTest {
         Thread.sleep(5000);
     }
     
-    @Test (priority = 4)
+    @Test (priority = 7)
     public void checkout() throws InterruptedException{
         //pay
         driver.findElement(By.xpath("/html/body/div[1]/div/section/div[2]/section/main/div/form/div/div[1]/section[2]/div/div[2]/div[1]/div[1]/span")).click();
@@ -117,7 +158,7 @@ public class KongaTest {
         Thread.sleep(5000);
     }
 
-    @Test (priority = 5)
+    @Test (priority = 8)
     public void switchIframe() throws InterruptedException{
         //switch iframe
         WebElement iframe = driver.findElement(By.id("kpg-frame-component"));
@@ -135,8 +176,9 @@ public class KongaTest {
         Thread.sleep(5000);
     }
 
-    @Test (priority = 6)
-    public void errorMessage() throws InterruptedException{
+
+    @Test (priority = 9)
+    public void payErrorMessage() throws InterruptedException{
         //very error message
         String actualError = driver.findElement(By.xpath("/html/body/section/section/section/div[2]/div[3]/div/form[1]/div[2]/div[1]/div[1]/div[2]/label")).getText();
         String expectedError = "Invalid card number";
@@ -145,7 +187,7 @@ public class KongaTest {
         Thread.sleep(5000);
     }
 
-    @Test (priority = 7)
+    @Test (priority = 10)
     public void closeIframe() throws InterruptedException{
         //close iframe
         driver.findElement(By.xpath("/html/body/section/section/section/div[2]/div[1]/aside")).click();
